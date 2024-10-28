@@ -1,6 +1,8 @@
 module test
 
-go 1.18
+go 1.22.6
+
+require github.com/gruntwork-io/terratest v0.47.2
 
 require (
 	cloud.google.com/go v0.110.0 // indirect
@@ -32,7 +34,6 @@ require (
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.1 // indirect
 	github.com/gruntwork-io/go-commons v0.8.0 // indirect
-	github.com/gruntwork-io/terratest v0.47.2 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-getter v1.7.6 // indirect
