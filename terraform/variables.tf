@@ -16,7 +16,7 @@ variable "yc_token" {
 variable "vm_image_id" {
   description = "ID образа для виртуальных машин (например, Ubuntu)"
   type        = string
-  default     = "fd80viupr3qjr5g6g9du" # Примерный ID образа
+  default     = "fd80viupr3qjr5g6g9du"
 }
 
 variable "vm_platform_id" {

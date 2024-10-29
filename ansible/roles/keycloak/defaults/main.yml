@@ -1,0 +1,5 @@
+postgres_host: rc1a-esoq28dlzmczsfyi.mdb.yandexcloud.net
+keycloak_public_ip: 89.169.145.242
+postgres_user: keycloak_user
+postgres_password: password
+postgres_db: db

@@ -1,0 +1,8 @@
+# ansible/roles/zabbix/defaults/main.yml
+ 
+zabbix_version: "5.0"
+zabbix_server_config_file: "/etc/zabbix/zabbix_server.conf"
+zabbix_agent_config_file: "/etc/zabbix/zabbix_agentd.conf"
+zabbix_agent_service_name: "zabbix-agent"
+zabbix_server_service_name: "zabbix-server"
+zabbix_server_port: 10051

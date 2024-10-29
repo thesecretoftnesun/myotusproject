@@ -1,0 +1,9 @@
+# ansible/roles/zabbix/templates/zabbix_server.conf.j2
+
+LogFile=/var/log/zabbix/zabbix_server.log
+PidFile=/var/run/zabbix/zabbix_server.pid
+DBHost=localhost
+DBName=zabbix
+DBUser=zabbix
+DBPassword=zabbix_password
+ListenPort={{ zabbix_server_port }}

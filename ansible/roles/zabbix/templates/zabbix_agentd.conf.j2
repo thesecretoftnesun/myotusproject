@@ -1,0 +1,6 @@
+# ansible/roles/zabbix/templates/zabbix_agentd.conf.j2
+
+LogFile=/var/log/zabbix/zabbix_agentd.log
+Server=127.0.0.1
+Hostname={{ ansible_hostname }}
+ListenPort=10050

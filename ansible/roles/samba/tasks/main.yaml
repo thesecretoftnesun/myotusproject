@@ -1,0 +1,16 @@
+# ansible/roles/samba/tasks/main.yml
+
+- name: Install Samba
+  apt:
+    name: samba
+    state: present
+
+- name: Configure Samba as Domain Controller
+  template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+
+- name: Restart Samba
+  service:
+    name: smbd
+    state: restarted

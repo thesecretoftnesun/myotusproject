@@ -1,0 +1,59 @@
+# ansible/roles/zabbix/tasks/install.yml
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Add Zabbix repository
+  apt_repository:
+    repo: "deb http://repo.zabbix.com/zabbix/5.0/ubuntu/ bionic main"
+    state: present
+
+- name: Add Zabbix signing key
+  apt_key:
+      url: "https://repo.zabbix.com/zabbix-official-repo.key"
+      state: present
+
+- name: Update apt cache after adding Zabbix repo
+  apt:
+    update_cache: yes
+
+- name: Install Zabbix server and agent
+  apt:
+    name:
+      - zabbix-server-mysql
+      - zabbix-frontend-php
+      - zabbix-agent
+    state: present
+    allow_unauthenticated: yes
+    update_cache: yes
+
+- name: Ensure Zabbix configuration directory exists
+  file:
+    path: /etc/zabbix
+    state: directory
+    mode: '0755'
+
+- name: Configure Zabbix server
+  template:
+    src: zabbix_server.conf.j2
+    dest: /etc/zabbix/zabbix_server.conf
+  notify:
+    - Restart Zabbix server
+
+- name: Start and enable Zabbix server service
+  systemd:
+    name: zabbix-server
+    enabled: true
+    state: started
+
+- name: Start and enable Zabbix agent service
+  systemd:
+    name: zabbix-agent
+    enabled: true
+    state: started
+
+- name: Enable Apache for Zabbix frontend
+  systemd:
+    name: apache2
+    enabled: true
+    state: started

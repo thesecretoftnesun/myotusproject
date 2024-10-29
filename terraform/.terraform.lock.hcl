@@ -6,6 +6,6 @@ provider "registry.terraform.io/yandex-cloud/yandex" {
   hashes = [
     "h1:EJ5aP+puPAFYYycM0wa7gR5nEHvacWL/7pUlu0tPp8Q=",
     "h1:cOkq7033pANBDcI9yBP+iCqeGC+JQEvTV0+e9/nFGtA=",
-    "h1:ivr3eD+L2Zlzc4QuVLQGD7ju8PDTKHGnU3aGYxAHAII=",
+    "h1:ns905wJslwEiDFU6Y4BumeXj9xkRpGf0Cx7JQ2/mezo=",
   ]
 }

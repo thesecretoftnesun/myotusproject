@@ -1,23 +1,3 @@
-variable "vm_name" {
-  description = "Имя виртуальной машины"
-  type        = string
-}
-
-variable "vm_hostname" {
-  description = "Хостнейм виртуальной машины"
-  type        = string
-}
-
-variable "network_id" {
-  description = "ID сети Yandex VPC"
-  type        = string
-}
-
-variable "subnet_id" {
-  description = "ID подсети Yandex VPC"
-  type        = string
-}
-
 resource "yandex_compute_instance" "zabbix" {
   name = var.vm_name
 

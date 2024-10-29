@@ -1,0 +1,30 @@
+# ansible/roles/zabbix/tasks/main.yml
+
+- include_tasks: install.yml
+
+- name: Configure Zabbix server
+  template:
+    src: zabbix_server.conf.j2
+    dest: "{{ zabbix_server_config_file }}"
+  notify:
+    - Restart Zabbix server
+
+- name: Start and enable Zabbix server service
+  systemd:
+    name: "zabbix-server"
+    enabled: true
+    state: started
+
+- name: Configure Zabbix agent
+  template:
+    src: zabbix_agentd.conf.j2
+    dest: "{{ zabbix_agent_config_file }}"
+  notify:
+    - Restart Zabbix agent
+
+- name: Start and enable Zabbix agent service
+  systemd:
+    name: "zabbix-agent"
+    enabled: true
+    state: started
+

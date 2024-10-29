@@ -1,0 +1,27 @@
+- name: Install PostgreSQL
+  apt:
+    name: postgresql
+    state: present
+
+- name: Configure PostgreSQL for Keycloak
+  postgresql_user:
+    name: "keycloak_user"
+    password: "{{ db_password }}"
+    db: "keycloak_db"
+
+- name: Configure database settings
+  lineinfile:
+    path: /etc/postgresql/15/main/pg_hba.conf
+    line: "host all all 0.0.0.0/0 md5"
+    create: yes
+
+- name: Set listen_addresses for PostgreSQL
+  lineinfile:
+    path: /etc/postgresql/15/main/postgresql.conf
+    regexp: "^#listen_addresses"
+    line: "listen_addresses = '*'"
+
+- name: Restart PostgreSQL
+  service:
+    name: postgresql
+    state: restarted

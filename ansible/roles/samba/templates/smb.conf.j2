@@ -1,0 +1,20 @@
+# ansible/roles/samba/templates/smb.conf.j2
+
+[global]
+   workgroup = SAMBA
+   security = user
+   domain logons = yes
+   domain master = yes
+   logon path = \\%L\Profiles\%U
+   logon home = \\%L\%U\.9xprofile
+   preferred master = yes
+
+[netlogon]
+   path = /var/lib/samba/netlogon
+   read only = yes
+
+[profiles]
+   path = /var/lib/samba/profiles
+   read only = no
+   create mask = 0600
+   directory mask = 0700

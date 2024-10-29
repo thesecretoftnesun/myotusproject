@@ -1,11 +1,30 @@
-variable "vm_image_id" {
-  description = "ID образа для виртуальных машин (например, Ubuntu)"
+variable "name" {
+  description = "Имя кластера PostgreSQL"
   type        = string
-  default     = "fd80viupr3qjr5g6g9du" # Примерный ID образа
 }
 
-variable "vm_platform_id" {
-  description = "ID платформы для виртуальных машин (например, стандарт x86)"
+variable "network_id" {
+  description = "ID сети VPC для подключения кластера"
   type        = string
-  default     = "standard-v1"
+}
+
+variable "subnet_id" {
+  description = "ID подсети для размещения PostgreSQL"
+  type        = string
+}
+
+variable "db_name" {
+  description = "Имя базы данных"
+  type        = string
+}
+
+variable "db_user" {
+  description = "Имя пользователя для базы данных"
+  type        = string
+}
+
+variable "db_password" {
+  description = "Password for PostgreSQL database"
+  type        = string
+  sensitive   = true
 }

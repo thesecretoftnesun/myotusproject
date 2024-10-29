@@ -1,0 +1,18 @@
+# Основные настройки сервера Keycloak
+# Указываем IP-адрес или доменное имя, на котором будет работать Keycloak
+hostname={{ keycloak_public_ip }}
+
+# Конфигурация базы данных PostgreSQL
+# Указываем параметры для подключения к базе данных
+db=db
+db-url=jdbc:postgresql://{{ keycloak_public_ip }}:6432/{{ postgres_db }}
+db-username={{ postgres_user }}
+db-password={{ postgres_password }}
+
+# Настройки для работы с сетью
+http-port=8080
+https-port=8443
+
+# Дополнительные параметры (при необходимости)
+# Например, уровень логирования или настройки кэширования
+log-level=INFO
