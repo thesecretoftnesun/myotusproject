@@ -1,12 +1,12 @@
 # ansible/inventories/production/hosts
 [keycloak]
-89.169.145.242
+89.169.153.203
 
 [samba]
-51.250.10.84
+62.84.125.144
 
 [zabbix]
-51.250.83.218
+62.84.113.161
 
 [all:children]
 keycloak
@@ -14,4 +14,4 @@ samba
 zabbix
 
 [keycloak:vars]
-postgres_host=rc1a-1epbukifco0o4kqf.mdb.yandexcloud.net
+postgres_host=rc1a-dm9l4holcw59x7ol.mdb.yandexcloud.net

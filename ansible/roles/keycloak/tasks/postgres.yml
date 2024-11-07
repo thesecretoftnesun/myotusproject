@@ -1,0 +1,21 @@
+---
+- name: Install PostgreSQL driver for Keycloak
+  get_url:
+    url: https://jdbc.postgresql.org/download/postgresql-42.5.0.jar
+    dest: /opt/keycloak/providers/postgresql.jar
+
+- name: Configure Keycloak database connection
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    create: yes
+    line: "{{ item }}"
+  loop:
+     - "db=postgres"
+     - "db-url=jdbc:postgresql://{{ db_host }}/{{ db_name }}"
+     - "db-username={{ db_user }}"
+     - "db-password={{ db_password }}"
+
+- name: Restart Keycloak service
+  systemd:
+    name: keycloak
+    state: restarted

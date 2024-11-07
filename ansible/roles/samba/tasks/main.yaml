@@ -1,16 +1,56 @@
-# ansible/roles/samba/tasks/main.yml
+---
+- name: Change hostname
+  hostname:
+    name: "{{ hostname }}"
 
-- name: Install Samba
-  apt:
-    name: samba
+- name: Update /etc/hosts file
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ ip_address }} {{ hostname }}.{{ realm_name }} {{ hostname }}"
     state: present
 
-- name: Configure Samba as Domain Controller
-  template:
-    src: smb.conf.j2
-    dest: /etc/samba/smb.conf
+- name: Install Samba packages
+  apt:
+    name: [samba, smbclient, krb5-user, winbind, samba-common-bin]
+    state: present
+    update_cache: yes
 
-- name: Restart Samba
-  service:
+- name: Backup existing smb.conf if it exists
+  command: mv /etc/samba/smb.conf /etc/samba/smb.conf.orig
+  args:
+    removes: /etc/samba/smb.conf
+
+- name: Provision Samba AD Domain
+  command: >
+    samba-tool domain provision
+    --realm={{ realm_name }}
+    --domain={{ domain_name }}
+    --adminpass={{ admin_password }}
+    --server-role=dc
+  args:
+    creates: /var/lib/samba/private/krb5.conf  
+
+- name: Backup existing Kerberos configuration
+  command: mv /etc/krb5.conf /etc/krb5.conf.orig
+  args:
+    creates: /etc/krb5.conf.orig
+
+- name: Copy Samba-generated Kerberos configuration
+  copy:
+    src: /var/lib/samba/private/krb5.conf
+    dest: /etc/krb5.conf
+    remote_src: yes
+
+- name: Start Samba service
+  systemd:
     name: smbd
-    state: restarted
+    state: started
+    enabled: true
+
+- name: Add firewall rule for Samba
+  ufw:
+    rule: allow
+    name: Samba
+
+- name: Verify Samba configuration
+  command: samba-tool domain level show

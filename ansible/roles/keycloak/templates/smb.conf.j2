@@ -1,0 +1,14 @@
+[global]
+workgroup = SAMBA
+security = user
+realm = SAMBA.DOMAIN
+idmap config * : backend = tdb
+idmap config * : range = 10000-99999
+template shell = /bin/bash
+winbind use default domain = true
+winbind offline logon = false
+dns proxy = no
+socket options = TCP_NODELAY
+preferred master = no
+os level = 0
+domain logons = no

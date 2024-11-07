@@ -21,7 +21,7 @@ variable "subnet_id" {
 variable "vm_image_id" {
   description = "ID образа для виртуальных машин (например, Ubuntu)"
   type        = string
-  default     = "fd80viupr3qjr5g6g9du" 
+  default     = "fd8k3gggfrs13lk01m77" 
 }
 
 variable "vm_platform_id" {

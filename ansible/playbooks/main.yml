@@ -1,15 +1,12 @@
-- name: Configure Keycloak, Samba, Zabbix, and PostgreSQL
+- name: Configure Keycloak, Samba, Zabbix
   hosts: all
   become: true
   roles:
-    #- role: postgres
-    #  when: inventory_hostname in groups['postgres']
+    - role: samba
+      when: inventory_hostname in groups['samba']
 
     - role: keycloak
       when: inventory_hostname in groups['keycloak']
-
-    - role: samba
-      when: inventory_hostname in groups['samba']
 
     - role: zabbix
       when: inventory_hostname in groups['zabbix']

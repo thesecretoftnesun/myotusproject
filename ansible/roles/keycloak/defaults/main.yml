@@ -1,5 +1,13 @@
-postgres_host: rc1a-esoq28dlzmczsfyi.mdb.yandexcloud.net
-keycloak_public_ip: 89.169.145.242
+domain_admin: admin
+domain_name: SAMBA
+realm_name: samba.domain
+admin_password: 123qweASD # Consider using Ansible Vault for sensitive dataъ
+postgres_host: rc1a-dm9l4holcw59x7ol.mdb.yandexcloud.net
+keycloak_public_ip: 89.169.153.203
 postgres_user: keycloak_user
-postgres_password: password
+postgres_password: "{{ lookup('env', 'DB_PASSWORD') }}"
 postgres_db: db
+hostname: keycloak             
+keycloak_admin: admin
+keycloak_admin_password: 123qweASD
+dns_ip: 

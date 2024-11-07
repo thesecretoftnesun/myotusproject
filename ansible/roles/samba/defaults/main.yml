@@ -1,0 +1,5 @@
+domain_name: "SAMBA"
+realm_name: "samba.domain"
+admin_password: "123qweASD"  # Consider using Ansible Vault for sensitive dataъ
+hostname: "dc01"
+ip_address: "{{ ansible_default_ipv4.address }}"

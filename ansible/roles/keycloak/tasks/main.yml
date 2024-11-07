@@ -1,16 +1,38 @@
 ---
+- name: Change hostname
+  hostname:
+    name: "{{ hostname }}"
 
-- name: Install Java (required for Keycloak)
+- name: Update /etc/hosts file
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ ip_address }} {{ hostname }}.{{ realm_name }} {{ hostname }}"
+    state: present
+
+- name: Configure DNS in /etc/resolv.conf for domain join
+  template:
+    dest: /etc/resolv.conf
+    src: resolv.conf.j2
+    
+- name: Update apt-get repo and cache
+  apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+- name: Install necessary packages
   apt:
-    name: openjdk-11-jdk
+    name: 
+      - openjdk-17-jdk
+      - wget
+      - samba
+      - winbind
+      - krb5-user
+      - smbclient
     state: present
     update_cache: yes
 
-- name: Install unzip (required for Keycloak installation)
-  apt:
-    name: unzip
-    state: present
-    update_cache: yes
+- name: Move existing Samba config to backup if it exists
+  command: mv /etc/samba/smb.conf /etc/samba/smb.conf.orig
+  args:
+    removes: /etc/samba/smb.conf
 
 - name: Ensure Keycloak directory exists
   file:
@@ -26,22 +48,23 @@
 
 - name: Download Keycloak
   get_url:
-    url: "https://github.com/keycloak/keycloak/releases/download/15.0.2/keycloak-15.0.2.zip"
-    dest: /opt/keycloak/keycloak.zip
+    url: "https://github.com/keycloak/keycloak/releases/download/23.0.3/keycloak-23.0.3.tar.gz"
+    dest: /opt/keycloak.tar.gz
     mode: '0644'
 
-- name: Unzip Keycloak
+- name: Extract Keycloak
   unarchive:
-    src: /opt/keycloak/keycloak.zip
-    dest: /opt/keycloak/
-    remote_src: yes
-    creates: /opt/keycloak/keycloak-15.0.2
+      src: /opt/keycloak.tar.gz
+      dest: /opt/
+      remote_src: yes
 
-- name: Create a symbolic link to Keycloak folder
-  file:
-    src: /opt/keycloak/keycloak-15.0.2
-    dest: /opt/keycloak/current
-    state: link
+- name: Join Keycloak server to Samba domain
+  command: net ads join -U {{ domain_admin }}%{{ domain_password }} -D {{ domain_name }}
+
+- name: Set up smb.conf for domain member
+  template:
+    src: templates/smb.conf.j2
+    dest: /etc/samba/smb.conf
 
 - name: Configure Keycloak to use PostgreSQL
   template:
@@ -49,3 +72,34 @@
       dest: /opt/keycloak/conf/keycloak.conf
   notify:
         - Restart Keycloak
+
+- name: Create Keycloak admin account and start Keycloak
+  environment:
+        KEYCLOAK_ADMIN: "{{ keycloak_admin }}"
+        KEYCLOAK_ADMIN_PASSWORD: "{{ keycloak_admin_password }}"
+  command: "/opt/keycloak-{{ keycloak_version }}/bin/kc.sh start --optimized"
+  async: 90
+  poll: 0
+
+- name: Configure Keycloak service
+  copy:
+     content: |
+       [Unit]
+        Description=Keycloak Service
+        After=multi-user.target
+          
+        [Service]
+        WorkingDirectory=/opt/keycloak
+        ExecStart=/opt/keycloak/bin/kc.sh start
+        Restart=on-failure
+          
+        [Install]
+        WantedBy=multi-user.target
+     dest: /etc/systemd/system/keycloak.service
+     mode: '0644'
+
+- name: Start and enable Keycloak service
+  systemd:
+    name: keycloak
+    enabled: true
+    state: started
